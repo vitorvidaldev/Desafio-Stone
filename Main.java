@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         List<Item> items = new ArrayList<Item>();
         List<String> emails = new ArrayList<String>();
+        Map<String, Integer> result = new HashMap<String, Integer>();
 
         // List initialization
         try {
@@ -47,15 +48,22 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Calculate value per person.
-        Map<String, Integer> result = valuePerPerson(emails, items);
+        if (emails.size() > 0) {
+            // Calculate value per person.
+            result = valuePerPerson(emails, items);
 
-        System.out.println(result.values());
+            // The result has been ordered following the HashMap. The keys won't be in the
+            // same order that was established in the emails.txt file
+            result.entrySet().forEach(entry -> {
+                System.out.println(entry.getKey() + " " + entry.getValue());
+            });
+        }
     }
 
     public static Map<String, Integer> valuePerPerson(List<String> emails, List<Item> items) {
         int totalValue = 0;
 
+        // Calculates the total value of all the items in the list
         for (Item i : items) {
             totalValue += i.value * i.quantity;
         }
@@ -66,6 +74,9 @@ public class Main {
         Map<String, Integer> resultMap = new HashMap<String, Integer>();
 
         for (String email : emails) {
+
+            // If there's a remainder, it has to be distributed as equally as possible
+            // between all keys
             if (remainder > 0) {
                 resultMap.put(email, finalValue + 1);
                 remainder--;
@@ -78,6 +89,7 @@ public class Main {
     }
 }
 
+// Item Class definition
 class Item {
     String name;
     int value;
