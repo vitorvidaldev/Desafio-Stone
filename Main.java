@@ -2,12 +2,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         List<Item> items = new ArrayList<Item>();
         List<String> emails = new ArrayList<String>();
 
@@ -33,6 +34,11 @@ public class Main {
                 newItem.value = Integer.parseInt(parts[1]);
                 newItem.quantity = Integer.parseInt(parts[2]);
 
+                if (newItem.value < 0 || newItem.quantity < 0) {
+                    itemsReader.close();
+                    throw new Exception("Negative numbers are invalid!");
+                }
+
                 items.add(newItem);
             }
             itemsReader.close();
@@ -43,6 +49,8 @@ public class Main {
 
         // Calculate value per person.
         Map<String, Integer> result = valuePerPerson(emails, items);
+
+        System.out.println(result.values());
     }
 
     public static Map<String, Integer> valuePerPerson(List<String> emails, List<Item> items) {
@@ -53,11 +61,20 @@ public class Main {
         }
 
         int finalValue = totalValue / emails.size();
+        int remainder = totalValue % emails.size();
 
-        System.out.println(totalValue);
-        System.out.println(finalValue);
+        Map<String, Integer> resultMap = new HashMap<String, Integer>();
 
-        return null;
+        for (String email : emails) {
+            if (remainder > 0) {
+                resultMap.put(email, finalValue + 1);
+                remainder--;
+            } else {
+                resultMap.put(email, finalValue);
+            }
+        }
+
+        return resultMap;
     }
 }
 

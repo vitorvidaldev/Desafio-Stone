@@ -1,5 +1,5 @@
 biscoito;400;10
 ventilador;7000;1
 notebook;700000;10
-caderno;1000;100
+caderno bonito;1000;100
 tenis;20000;1
